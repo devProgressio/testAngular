@@ -1,0 +1,244 @@
+<div class="ui-g">
+  <div class="ui-lg-12 ui-md-12 ui-sm-12">
+    <p-breadcrumb [model]="items"></p-breadcrumb>
+    <br><br>
+    <button pButton type="button" class="ui-button-raised ui-button-rounded">click</button>
+    <br />
+    <button pButton type="button" label="Click"></button>
+    <p-button label="Click"></p-button>
+    <h3>Boolean - {{checked}}</h3>
+    <br>
+
+    <p-radioButton name="groupname" value="val1" [(ngModel)]="selectedValue"></p-radioButton>
+    <p-radioButton name="groupname" value="val2" [(ngModel)]="selectedValue"></p-radioButton>
+    <!-- 
+<p-radioButton name="groupname" value="val1" [(ngModel)]="checked"></p-radioButton>
+
+      <p-checkbox [(ngModel)]="checked" binary="true"></p-checkbox>
+
+        <p-checkbox name="groupname" value="val1" [(ngModel)]="selectedValues"></p-checkbox>
+        <p-checkbox name="groupname" value="val2" [(ngModel)]="selectedValues"></p-checkbox>
+-->
+    <br>
+    <h3 class="first">Basic</h3>
+    <div class="ui-g" style="width:250px;margin-bottom:10px">
+      <div class="ui-g-12">
+        <p-radioButton name="group1" value="Option 1" label="Option 1" [(ngModel)]="val1" inputId="opt1">
+        </p-radioButton>
+      </div>
+      <div class="ui-g-12">
+        <p-radioButton name="group1" value="Option 2" label="Option 2" [(ngModel)]="val1" inputId="opt2">
+        </p-radioButton>
+      </div>
+      <div class="ui-g-12">
+        <p-radioButton name="group1" value="Option 3" label="Option 3" [(ngModel)]="val1" inputId="opt3">
+        </p-radioButton>
+      </div>
+    </div>
+    Selected Value = {{val1||'none'}}
+
+    <div class="ui-g-12">
+      <h3>Spanish</h3>
+      <p-calendar [(ngModel)]="date2" [locale]="es" dateFormat="dd/mm/yy" [showIcon]="true" showButtonBar="true">
+      </p-calendar>
+    </div>
+
+    <br>
+    <h3>ng-template</h3>
+    <p-chips [(ngModel)]="values2">
+      <ng-template let-item pTemplate="item">
+        {{item}} - (active) <i class="fa fa-user" style="margin-right:2em"></i>
+      </ng-template>
+    </p-chips>
+    <br>
+    <div class="ui-g-12 ui-md-6 ui-lg-4">
+      <span>Basic</span>
+      <p-inputMask mask="99-999-999-*" [(ngModel)]="val1" placeholder="99-999-999-9"></p-inputMask>
+
+    </div>
+    <br>
+    <p-dialog header="modal example" [(visible)]="display" [modal]="true" [responsive]="true"
+      [style]="{width: '350px', minWidth: '200px'}" [minY]="70" [maximizable]="true" [baseZIndex]="10000">
+      <p>The story begins as Don Vito Corleone, the head of a New York Mafia family, oversees his daughter's wedding.
+        His beloved son Michael has just come home from the war, but does not intend to become part of his father's
+        business.
+        Through Michael's life the nature of the family business becomes clear. The business of the family is just like
+        the head of the family,
+        kind and benevolent to those who give respect,
+        but given to ruthless violence whenever anything stands against the good of the family.</p>
+      <br>
+      <h3 class="first">Positions</h3>
+      <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-3" #right style="display:inline-block;position:relative">
+          <input type="text" pInputText pTooltip="Enter your username" placeholder="Right" [appendTo]="right">
+        </div>
+        <div class="ui-g-12 ui-md-3" #top style="display:inline-block;position:relative">
+          <input type="text" pInputText pTooltip="Enter your username" tooltipPosition="top" placeholder="Top"
+            [appendTo]="top">
+        </div>
+        <div class="ui-g-12 ui-md-3">
+          <input type="text" pInputText pTooltip="Enter your username" tooltipPosition="bottom" placeholder="Bottom">
+        </div>
+        <div class="ui-g-12 ui-md-3">
+          <input type="text" pInputText pTooltip="Enter your username" tooltipPosition="left" placeholder="Left">
+        </div>
+      </div>
+
+      <h3>Focus and Blur</h3>
+      <input type="text" pInputText pTooltip="Enter your username" placeholder="Right" tooltipEvent="focus"
+        style="margin-left:.5em">
+
+      <div #container style="display:inline-block;position:relative">
+        <input type="text" pInputText pTooltip="Enter your username" placeholder="Right" [appendTo]="container">
+      </div>
+      <br>
+      <input type="text" pTooltip="Enter your username">
+      <br>
+      <input type="text" pTooltip="Enter your username" tooltipPosition="top">
+
+      <p-footer>
+        <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Yes"></button>
+        <button type="button" pButton icon="pi pi-close" (click)="display=false" label="No"
+          class="ui-button-secondary"></button>
+      </p-footer>
+    </p-dialog>
+
+    <button type="button" (click)="showDialog()" pButton icon="pi pi-info-circle" label="Show"></button>
+
+
+  </div>
+</div>
+
+<!-- ------------------------------------------------------------------------------------------ -->
+<!-- main app container -->
+<div class="ui-g ui-fluid">
+  <div class="ui-md-6 ui-md-offset-3">
+    <h3>Angular 7 Reactive Form Validation</h3>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmitx()">
+      <div class="ui-inputgroup">
+        <label>First Name</label>
+        <input pInputText type="text" formControlName="firstName"
+          [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />
+        <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
+          <div *ngIf="f.firstName.errors.required">First Name is required</div>
+        </div>
+      </div>
+      <div class="ui-inputgroup">
+        <label>Last Name</label>
+        <input pInputText type="text" formControlName="lastName"
+          [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" />
+        <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
+          <div *ngIf="f.lastName.errors.required">Last Name is required</div>
+        </div>
+      </div>
+      <div class="ui-inputgroup">
+        <label>Email</label>
+        <input pInputText type="text" formControlName="email"
+          [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+        <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+          <div *ngIf="f.email.errors.required">Email is required</div>
+          <div *ngIf="f.email.errors.email">Email must be a valid email address</div>
+        </div>
+      </div>
+      <div class="ui-inputgroup">
+        <label>Password</label>
+        <input pInputText type="password" formControlName="password" 
+          [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+        <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+          <div *ngIf="f.password.errors.required">Password is required</div>
+          <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+        </div>
+      </div>
+      <div class="ui-inputgroup">
+        <label>Confirm Password</label>
+        <input pInputText type="password" formControlName="confirmPassword"
+          [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" />
+        <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback">
+          <div *ngIf="f.confirmPassword.errors.required">Confirm Password is required</div>
+          <div *ngIf="f.confirmPassword.errors.mustMatch">Passwords must match</div>
+        </div>
+      </div>
+      <div class="ui-inputgroup">
+        <button>Register</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<br><br><br>
+
+<p-toast [style]="{marginTop: '80px'}"></p-toast>
+
+<form [formGroup]="userform" (ngSubmit)="onSubmit(userform.value)">
+    <p-panel header="Validate">
+        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    First Name *:
+                </div>
+                <div class="ui-grid-col-6">
+                    <input pInputText type="text" formControlName="firstname" placeholder="Required"/>
+                </div>
+                <div class="ui-grid-col-4">
+                    <p-message severity="error" text="Firstname is required" *ngIf="!userform.controls['firstname'].valid&&userform.controls['firstname'].dirty"></p-message>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    Last Name *:
+                </div>
+                <div class="ui-grid-col-6">
+                    <input pInputText type="text" formControlName="lastname" placeholder="Required"/>
+                </div>
+                <div class="ui-grid-col-4">
+                    <p-message severity="error" text="Lastname is required" *ngIf="!userform.controls['lastname'].valid&&userform.controls['lastname'].dirty"></p-message>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    Password *:
+                </div>
+                <div class="ui-grid-col-6">
+                    <input pInputText type="password" formControlName="password" placeholder="Required - Min(6)"/>
+                </div>
+                <div class="ui-grid-col-4">
+                <p-message severity="error" [text]="userform.controls['password'].errors['required'] ? 'Password is required' : userform.controls['password'].errors['minlength'] ? 'Must be longer than 6 characters' : ''" 
+                        *ngIf="!userform.controls['password'].valid&&userform.controls['password'].dirty"></p-message>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    Description:
+                </div>
+                <div class="ui-grid-col-6">
+                    <textarea pInputTextarea type="text" formControlName="description"></textarea>
+                </div>
+                <div class="ui-grid-col-4"></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    Gender *:
+                </div>
+                <div class="ui-grid-col-6">
+                    <p-dropdown [options]="genders" formControlName="gender"></p-dropdown>
+                </div>
+                <div class="ui-grid-col-4">
+                    <p-message severity="error" text="Gender is required" *ngIf="!userform.controls['gender'].valid&&userform.controls['gender'].dirty"></p-message>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2"></div>
+                <div class="ui-grid-col-6">
+                    <button pButton type="submit" label="Submit" [disabled]="!userform.valid"></button>
+                </div>
+                <div class="ui-grid-col-4"></div>
+            </div>
+            <div style="text-align:center;margin-top:20px" *ngIf="submitted">
+                Form Submitted
+                <br>
+                {{diagnostic}}
+            </div>
+        </div>
+    </p-panel>
+</form>

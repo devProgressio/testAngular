@@ -1,0 +1,34 @@
+.subrayado{
+    text-decoration: underline;
+    text-decoration-style: wavy;
+  text-decoration-color: red;
+    height: 200px;
+  width: 50%;
+  background-color: powderblue;
+  }
+
+  .redColoredPanel .ui-panel-titlebar {
+    color: red;
+ }
+ body .ui-panel .ui-panel-titlebar {
+   background-color: blueviolet;
+ }
+
+
+
+ .transparent_class {
+  /* IE 8 */
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+
+  /* IE 5-7 */
+  filter: alpha(opacity=50);
+
+  /* Netscape */
+  -moz-opacity: 0.5;
+
+  /* Safari 1.x */
+  -khtml-opacity: 0.5;
+
+  /* Good browsers */
+  opacity: 0.5;
+}

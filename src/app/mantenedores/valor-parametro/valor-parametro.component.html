@@ -1,0 +1,457 @@
+<!--  ----------------example----------------------  -->
+<p-panel header="Configuración Parametros">
+  <br><br>
+  <div class="ui-g ui-fluid">
+    <div class="ui-g-12 ui-md-2 ui-lg-2" style="margin-top:3px; margin-right:25px;">
+      Selección
+    </div>
+    <div class="ui-g-12 ui-md-3 ui-lg-3">
+      <p-dropdown #aa [options]="emisores" [(ngModel)]="selectEmisor" placeholder="Seleccione Emisor"
+        optionLabel="nombre" [showClear]="true" filter="true" autofocus></p-dropdown>
+    </div>
+
+    <div class="ui-g-12 ui-md-3 ui-lg-3">
+      <p-dropdown #bb [options]="tipoMovimientoSaldo" [(ngModel)]="selectMovimiento"
+        placeholder="Seleccione tipo movimiento" optionLabel="glosa" [showClear]="true" filter="true"></p-dropdown>
+    </div>
+
+    <div class="ui-g-12 ui-md-3 ui-lg-3">
+      <p-dropdown #cc [options]="monedas" [(ngModel)]="selectMoneda" placeholder="Seleccione moneda"
+        optionLabel="nombre" [showClear]="true" filter="true"></p-dropdown>
+    </div>
+  </div>
+  <div class="ui-g ui-fluid">
+    <div class="ui-g-12 ui-md-2 ui-lg-2" style="margin-top:3px; margin-right:25px;">
+      Fecha
+    </div>
+    <div class="ui-g-12 ui-md-9 ui-lg-9">
+      <p-calendar [(ngModel)]="date11" [numberOfMonths]="2" [locale]="es" showButtonBar="true" dateFormat="dd-mm-yy"
+        yearNavigator="true" showWeek="true" selectOtherMonths="true">
+        <ng-template pTemplate="date" let-date>
+          <span [ngStyle]="{backgroundColor: getCrearFechasCalendar(date,aa,bb,cc) ? '#81C784' : 'inherit'}"
+            style="border-radius:50%;padding: .25em;width: 1.75em; height:1.75em; display:block;">{{date.day}}</span>
+        </ng-template>
+        <p-footer> <button pButton label="Close" (click)="show()"></button> </p-footer>
+      </p-calendar>
+    </div>
+  </div>
+  <!--
+  <div class="ui-g ui-fluid" *ngIf="selectEmisor && selectMovimiento && selectMoneda">
+    <div class="ui-g-12 ui-md-2 ui-lg-2" style="margin-top:3px; margin-right:25px;">
+      Tipo Parametro
+    </div>
+    
+    <div class="ui-g-12 ui-md-9 ui-lg-9">
+      <p-multiSelect [options]="options" [(ngModel)]="selectOption" [panelStyle]="{minWidth:'25em'}" optionLabel="glosa"
+        class="ui-multiselect-label-container" (ngModelChange)="changeOption(selectOption)" defaultLabel="Tipo Parametro"
+        scrollHeight ="400px" dataKey="codigo">
+      </p-multiSelect>
+    </div> 
+  </div>-->
+  <br><br>
+  <p-tabView>
+    <p-tabPanel header="Vigentes">
+      <div class="ui-g ui-fluid">
+        <ng-container *ngFor="let vigente of vigentes">
+          <div class="ui-g-12 ui-md-6 ui-lg-3">
+            <br><br>
+            <p-card [style]="{width: '200px', height: '170px'}" styleClass="ui-card-shadow">
+              <p-header>
+                <h4 style="text-align: center; padding-top: 10px;">{{mostrarGlosa(vigente.tipo)}}</h4>
+              </p-header>
+              <div class="ui-g">
+                <div class="ui-g-1"><i class="pi pi-calendar" pTooltip="Vigente desde" tooltipPosition="top"></i></div>
+                <div class="ui-g-10 ui-g-offset-1">{{formatDatePantalla(vigente.valido_desde)}}</div>
+
+                <div class="ui-g-1"><i class="pi pi-minus" pTooltip="Máximo" tooltipPosition="top"></i></div>
+                <div class="ui-g-10 ui-g-offset-1">{{vigente.valor_min}}</div>
+
+                <div class="ui-g-1"><i class="pi pi-plus" pTooltip="Mínimo" tooltipPosition="top"></i></div>
+                <div class="ui-g-10 ui-g-offset-1">{{vigente.valor_max}}</div>
+              </div>
+              <p-footer>
+
+              </p-footer>
+            </p-card>
+          </div>
+        </ng-container>
+      </div>
+      <br><br>
+    </p-tabPanel>
+    <p-tabPanel header="Nuevo">
+      <br><br>
+      <div>
+        <!--*ngIf="selectEmisor && selectMovimiento && selectMoneda"-->
+        <div class="ui-g ui-fluid">
+          <ng-container *ngFor="let param of tipo_parametros">
+            <div class="ui-g-12 ui-md-2 ui-lg-2" style="margin-top:3px; margin-right:25px;">
+              {{param.glosa}}
+            </div>
+            <div class="ui-g-12 ui-md-3 ui-lg-3">
+              <p-calendar [(ngModel)]="param.fecha" [locale]="es" dateFormat="dd-mm-yy" [showIcon]="true"
+                showButtonBar="true" placeholder="Comienza desde" [minDate]="minDate"
+                (ngModelChange)="changeFechaCalendar(param.fecha)" required="true" (onSelect)="onSelect(param,aa,bb,cc)"
+                dataType="string">
+                <ng-template pTemplate="date" let-date>
+                  <!--<span [ngStyle]="{backgroundColor: getMarkedDays(date,aa,bb,cc,param) ? '#81C784' : 'inherit'}"
+                    style="border-radius:50%;padding: .25em;width: 1.75em; height:1.75em; display:block;">{{date.day}}</span> 
+                    -->
+
+                  <div *ngIf="getMarkedDays(date,aa,bb,cc,param);then highlightedDate else normalDate"></div>
+                  <ng-template #highlightedDate>
+                    <div style="text-align: center;">
+                      <span [ngStyle]="{backgroundColor: '#81C784'}"
+                        style="border-radius:50%;padding: .25em;width: 1.75em; height:1.75em; display:block;">{{date.day}}</span>
+                      <button pButton label="editar" type="button" style="font-size: 9px;" (click)="show(param)"
+                        icon="pi pi-fw pi-pencil"></button>
+                    </div>
+                  </ng-template>
+
+                  <ng-template #normalDate>
+                    <span [ngStyle]="{backgroundColor: 'inherit'}" style="border-radius:75%">{{date.day}}</span>
+                  </ng-template>
+                </ng-template>
+              </p-calendar>
+              <p-dialog header="Editar" [(visible)]="display" [modal]="true" [responsive]="true"
+                [style]="{width: '350px', minWidth: '200px'}" [minY]="70" [maximizable]="true" [baseZIndex]="10000">
+                <br>
+                <div class="ui-g ui-fluid">
+                  <div class="ui-g-12 ui-md-3 ui-lg-12">
+                    <p-calendar [(ngModel)]="edit.fecha" [locale]="es" dateFormat="dd-mm-yy" [showIcon]="true"
+                      showButtonBar="true" placeholder="Comienza desde" [minDate]="minDate"
+                      (ngModelChange)="changeFechaCalendar(edit.fecha)" required="true"
+                      (onSelect)="onSelect(edit,aa,bb,cc)" dataType="string">
+                      <ng-template pTemplate="date" let-date>
+                        <!--<span [ngStyle]="{backgroundColor: getMarkedDays(date,aa,bb,cc,param) ? '#81C784' : 'inherit'}"
+                              style="border-radius:50%;padding: .25em;width: 1.75em; height:1.75em; display:block;">{{date.day}}</span> 
+                              -->
+
+                        <div *ngIf="getMarkedDays(date,aa,bb,cc,edit);then highlightedDate else normalDate"></div>
+                        <ng-template #highlightedDate>
+                          <div style="text-align: center;">
+                            <span [ngStyle]="{backgroundColor: '#81C784'}"
+                              style="border-radius:50%;padding: .25em;width: 1.75em; height:1.75em; display:block;">{{date.day}}</span>
+                            <button pButton label="editar" type="button" style="font-size: 9px;" (click)="show(edit)"
+                              icon="pi pi-fw pi-pencil"></button>
+                          </div>
+                        </ng-template>
+
+                        <ng-template #normalDate>
+                          <span [ngStyle]="{backgroundColor: 'inherit'}" style="border-radius:75%">{{date.day}}</span>
+                        </ng-template>
+                      </ng-template>
+                    </p-calendar>
+                  </div>
+
+                  <div class="ui-g-6 ui-md-3 ui-lg-6">
+                    <span class="ui-float-label">
+                      <input id="{{edit.codigo}}" type="text" pInputText [pKeyFilter]="tipoDato(edit.tipo_dato)"
+                        [(ngModel)]="edit.minimo" (ngModelChange)="changeDisabledButtonAcept()" required
+                        [disabled]="edit.disabled">
+                      <label for="float-input">{{mostrarLabel(edit.tipo_dato)}}</label>
+                    </span>
+                  </div>
+                  <div class="ui-g-6 ui-md-3 ui-lg-6">
+                    <div *ngIf="mostrarMaximo(edit.tipo_dato)">
+                      <span class="ui-float-label">
+                        <input id="{{edit.codigo + 1}}" type="text" pInputText [pKeyFilter]="tipoDato(edit.tipo_dato)"
+                          [(ngModel)]="edit.maximo" [disabled]="edit.disabled">
+                        <label for="float-input">Máximo</label>
+                      </span>
+                    </div>
+                  </div>
+
+                </div>
+                <p-footer>
+                  <button type="button" pButton icon="pi pi-check" (click)="aceptEdit(edit)" label="Aceptar"></button>
+                  <button type="button" pButton icon="pi pi-close" (click)="display=false" label="Cancelar"
+                    class="ui-button-secondary"></button>
+                </p-footer>
+              </p-dialog>
+            </div>
+            <div class="ui-g-6 ui-md-3 ui-lg-3">
+              <span class="ui-float-label">
+                <input id="{{param.codigo}}" type="text" pInputText [pKeyFilter]="tipoDato(param.tipo_dato)"
+                  [(ngModel)]="param.minimo" (ngModelChange)="changeDisabledButtonAcept()" required
+                  [disabled]="param.disabled">
+                <label for="float-input">{{mostrarLabel(param.tipo_dato)}}</label>
+              </span>
+            </div>
+            <div class="ui-g-6 ui-md-3 ui-lg-3">
+              <div *ngIf="mostrarMaximo(param.tipo_dato)">
+                <span class="ui-float-label">
+                  <input id="{{param.codigo + 1}}" type="text" pInputText [pKeyFilter]="tipoDato(param.tipo_dato)"
+                    [(ngModel)]="param.maximo" [disabled]="param.disabled">
+                  <label for="float-input">Máximo</label>
+                </span>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+        <br><br>
+
+        <!-- botones -->
+
+        <div class="ui-g ui-fluid ui-lg-offset-3 ui-md-offset-3">
+          <p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
+          <!-- <p-toast [style]="{marginTop: '80px'}" key="myKey1"></p-toast> -->
+          <div class="ui-g-6 ui-md-4 ui-lg-4">
+            <button pButton label="Cancelar" type="button" (click)="mostrarConsole()"
+              class="ui-button-raised ui-button-rounded ui-button-secondary"></button>
+          </div>
+          <div class="ui-g-6 ui-md-4 ui-lg-4">
+            <button pButton label="Confirmar" type="button" class="ui-button-raised ui-button-rounded ui-button-primary"
+              (click)="confirm1()" [disabled]="!disabledButton"></button>
+          </div>
+        </div>
+
+        <div class="ui-g ui-fluid">
+          <div class="ui-g-12">
+            <p-messages [value]="msgs"></p-messages>
+          </div>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="Buscar">
+      <br><br>
+      <div class="ui-g ui-fluid">
+        <div class="ui-g-12">
+            <div class="ui-g-12 ui-md-6  ui-lg-3 ui-lg-offset-1">
+                <p-dropdown [options]="tipo_parametros" [(ngModel)]="tipo" placeholder="Tipo parametro" optionLabel="glosa" [showClear]="true"
+                datakey="id" [panelStyle]="{minWidth:'30em'}"></p-dropdown>
+            </div>
+            <div class="ui-g-12 ui-md-6 ui-lg-3">
+                <input type="text" pInputText placeholder="Mínimo" [(ngModel)]="min"/>
+            </div>
+            <div class="ui-g-12 ui-md-6 ui-lg-3">
+                <input type="text" pInputText placeholder="Máximo" [(ngModel)]="max"/>
+            </div>
+            <div class="ui-g-12 ui-md-1 ui-lg-1">
+                <button pButton type="button" icon="pi pi-search" (click)="searchParam(tipo,min,max)" class="ui-button-raised ui-button-rounded ui-button-primary"></button>
+            </div>
+        </div>
+        <div class="ui-g-12">
+          <h3 class="first">Basic</h3>
+          <p-table [value]="paramBusqueda" [paginator]="true" [responsive]="true" [pageLinks]="3" [rows]="10">
+            <ng-template pTemplate="header">
+              <tr style="font-size: 12px; text-align: center;">
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Mínimo</th>
+                <th>Máximo</th>
+                <th></th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-p>
+              <tr style="font-size: 12px; text-align: center;">
+                <td>{{formatDatePantalla(p.valido_desde)}}</td>
+                <td>{{mostrarGlosa(p.tipo)}}</td>
+                <td>{{p.valor_min}}</td>
+                <td>{{p.valor_max}}</td>
+                <td style="width: 35px;">
+                  <div class="ui-g-12 ui-md-6">
+                      <button pButton type="button" icon="pi pi-pencil" iconPos="left" style="font-size: 12px;"
+                      (click)="editSearchParam(p)"></button>
+                  </div>
+                 <div class="ui-g-12 ui-md-6">
+                    <button pButton type="button" icon="pi pi-trash" iconPos="left" style="font-size: 12px;"
+                    (click)="deleteSearchParam(p.id)"></button>
+                 </div>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </p-tabPanel>
+  </p-tabView>
+  <br><br>
+
+  <br><br>
+
+</p-panel>
+<!-------------------------------------------------- example 2 --------------------------------------->
+<br>
+<hr />
+<br>
+<!-------------------------------------------------- example 2 --------------------------------------->
+
+<p-panel header="Configuración Parametros">
+  <br><br><br>
+  <div class="ui-g ui-fluid">
+    <div class="ui-g-12 ui-md-2 ui-lg-2" style="margin-top:3px; margin-right:25px;">
+      Selección
+    </div>
+    <div class="ui-g-12 ui-md-3 ui-lg-3">
+      <p-dropdown [options]="emisores" [(ngModel)]="selectEmisor" placeholder="Seleccione Emisor" optionLabel="nombre"
+        [showClear]="true" filter="true" autofocus></p-dropdown>
+    </div>
+
+    <div class="ui-g-12 ui-md-3 ui-lg-3">
+      <p-dropdown [options]="tipoMovimientos" [(ngModel)]="selectMovimiento" placeholder="Seleccione tipo movimiento"
+        optionLabel="glosa" [showClear]="true" filter="true"></p-dropdown>
+    </div>
+
+    <div class="ui-g-12 ui-md-3 ui-lg-3">
+      <p-dropdown [options]="monedas" [(ngModel)]="selectMoneda" placeholder="Seleccione moneda" optionLabel="nombre"
+        [showClear]="true" filter="true"></p-dropdown>
+    </div>
+  </div>
+  <div class="ui-g ui-fluid">
+    <div class="ui-g-12 ui-md-2 ui-lg-2" style="margin-top:3px; margin-right:25px;">
+      Fecha
+    </div>
+    <div class="ui-g-12 ui-md-9 ui-lg-9">
+      <p-calendar [(ngModel)]="date11" [numberOfMonths]="2" [locale]="es" showButtonBar="true"></p-calendar>
+    </div>
+  </div>
+  <br><br>
+  <!-- tipo parametro -->
+  <p-fieldset legend="Parametros">
+    <div>
+      <!-- *ngIf="selectOption != null && selectOption.length != 0" -->
+      <form [formGroup]="myGroup" (ngSubmit)="onSubmit(myGroup.value)">
+        <div class="ui-g ui-fluid">
+          <div class="ui-g-12 ui-md-2 ui-lg-2" style="margin-top:3px; margin-right:25px;">
+            Monto&nbsp;Sobregiro
+          </div>
+          <div class="ui-g-12 ui-md-3 ui-lg-3">
+            <p-calendar [(ngModel)]="fecha2" [locale]="es" dateFormat="dd/mm/yy" [showIcon]="true" showButtonBar="true"
+              placeholder="Seleccione fecha" [minDate]="minDate" [maxDate]="maxDate" formControlName="calendario">
+              <!-- si selecciona una fecha deben mostrarse los datos en pantalla-->
+              <ng-template pTemplate="date" let-date>
+                <span [ngStyle]="{backgroundColor: (date.day < 21 && date.day > 10) ? '#81C784' : 'inherit'}"
+                  style="border-radius:50%;padding: .25em;width: 1.75em; height:1.75em; display:block;">{{date.day}}</span>
+              </ng-template>
+              <ng-template pTemplate="date" let-date>
+                <span [ngStyle]="{backgroundColor: (date.day < 3 && date.day > 1) ? '#81C784' : 'inherit'}"
+                  style="border-radius:50%;padding: .25em;width: 1.75em; height:1.75em; display:block;">{{date.day}}</span>
+              </ng-template>
+            </p-calendar>
+          </div>
+          <div class="ui-g-6 ui-md-3 ui-lg-3">
+            <span class="ui-float-label" style="margin-bottom: 5px;">
+              <input id="1" formControlName="minimoSobregiro" type="text" pInputText pKeyFilter="num"
+                [(ngModel)]="montoMinimo">
+              <label for="float-input">Mínimo</label>
+            </span>
+          </div>
+
+          <div class="ui-g-6 ui-md-3 ui-lg-3">
+            <span class="ui-float-label" style="margin-bottom: 5px;">
+              <input formControlName="maximoSobregiro" type="text" pInputText pKeyFilter="num"
+                [(ngModel)]="montoMaximo">
+              <label for="float-input">Máximo</label>
+            </span>
+          </div>
+        </div>
+
+        <div class="ui-g ui-fluid">
+          <div class="ui-g-12 ui-md-2 ui-lg-2" style="margin-top:3px; margin-right:25px;">
+            Monto&nbsp;Transacción
+          </div>
+          <div class="ui-g-12 ui-md-3 ui-lg-3">
+            <p-calendar [(ngModel)]="fecha3" [locale]="es" dateFormat="dd/mm/yy" [showIcon]="true" showButtonBar="true"
+              placeholder="Seleccione fecha" formControlName="calendario1">
+            </p-calendar>
+          </div>
+          <div class="ui-g-6 ui-md-3 ui-lg-3">
+            <span class="ui-float-label" style="margin-bottom: 5px;">
+              <input formControlName="minimoTransaccion" type="text" pInputText pKeyFilter="num"
+                [(ngModel)]="montoMinimoTransaccion">
+              <label for="float-input">Mínimo</label>
+            </span>
+          </div>
+
+          <div class="ui-g-6 ui-md-3 ui-lg-3">
+            <span class="ui-float-label" style="margin-bottom: 5px;">
+              <input formControlName="maximoTransaccion" type="text" pInputText pKeyFilter="num"
+                [(ngModel)]="montoMaximoTransaccion">
+              <label for="float-input">Máximo</label>
+            </span>
+          </div>
+        </div>
+
+        <div class="ui-g ui-fluid">
+          <div class="ui-g-12 ui-md-2 ui-lg-2" style="margin-top:3px; margin-right:25px;">
+            Cantidad&nbsp;Cuotas
+          </div>
+          <div class="ui-g-12 ui-md-3 ui-lg-3">
+            <p-calendar [(ngModel)]="fecha4" [locale]="es" dateFormat="dd/mm/yy" [showIcon]="true" showButtonBar="true"
+              placeholder="Seleccione fecha" formControlName="calendario2">
+            </p-calendar>
+          </div>
+          <div class="ui-g-6 ui-md-3 ui-lg-3">
+            <span class="ui-float-label" style="margin-bottom: 5px;">
+              <input formControlName="minimoCuotas" type="number" pInputText pKeyFilter="int"
+                [(ngModel)]="cantidadMinimaCuotas">
+              <label for="float-input">Mínimo</label>
+            </span>
+          </div>
+
+          <div class="ui-g-6 ui-md-3 ui-lg-3">
+            <span class="ui-float-label" style="margin-bottom: 5px;">
+              <input formControlName="maximoCuotas" type="number" pInputText pKeyFilter="int"
+                [(ngModel)]="cantidadMaximaCuotas">
+              <label for="float-input">Máximo</label>
+            </span>
+          </div>
+        </div>
+
+        <div class="ui-g ui-fluid">
+          <div class="ui-g-12 ui-md-2 ui-lg-2" style="margin-top:3px; margin-right:25px; padding-right: 100px;">
+            Cantidad&nbsp;Cuotas&nbsp;Tasa&nbsp;0
+          </div>
+          <div class="ui-g-12 ui-md-3 ui-lg-3">
+            <p-calendar [(ngModel)]="fecha5" [locale]="es" dateFormat="dd/mm/yy" [showIcon]="true" showButtonBar="true"
+              placeholder="Seleccione fecha" formControlName="calendario3">
+            </p-calendar>
+          </div>
+          <div class="ui-g-6 ui-md-3 ui-lg-3">
+            <span class="ui-float-label" style="margin-bottom: 5px;">
+              <input formControlName="minimoTasa" type="number" pInputText pKeyFilter="int"
+                [(ngModel)]="cantidadMinimaCuotasTasa0">
+              <label for="float-input">Mínimo</label>
+            </span>
+          </div>
+
+          <div class="ui-g-6 ui-md-3 ui-lg-3">
+            <span class="ui-float-label" style="margin-bottom: 5px;">
+              <input formControlName="maximoTasa" type="number" pInputText pKeyFilter="int"
+                [(ngModel)]="cantidadMaximaCuotasTasa0">
+              <label for="float-input">Máximo</label>
+            </span>
+          </div>
+        </div>
+
+        <br><br>
+        <!-- botones -->
+        <div class="ui-g ui-fluid ui-lg-offset-3 ui-md-offset-3">
+          <p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
+          <!-- <p-toast [style]="{marginTop: '80px'}" key="myKey1"></p-toast> -->
+          <div class="ui-g-6 ui-md-4 ui-lg-4">
+            <button pButton label="Confirmar" type="button" class="ui-button-raised ui-button-rounded ui-button-primary"
+              (click)="confirm1()" [disabled]="!myGroup.valid"></button>
+
+          </div>
+          <div class="ui-g-6 ui-md-4 ui-lg-4">
+            <button pButton label="Cancelar" type="button" (click)="mostrarConsole()"
+              class="ui-button-raised ui-button-rounded ui-button-secondary"></button>
+          </div>
+        </div>
+        <div class="ui-g ui-fluid">
+          <div class="ui-g-12">
+            <p-messages [value]="msgs"></p-messages>
+          </div>
+        </div>
+      </form>
+    </div>
+  </p-fieldset>
+</p-panel>
+
+<div class="ui-g ui-fluid">
+  <div class="ui-g-12">
+    <p-fullCalendar [events]="events" [options]="options"></p-fullCalendar>
+  </div>
+
+</div>
