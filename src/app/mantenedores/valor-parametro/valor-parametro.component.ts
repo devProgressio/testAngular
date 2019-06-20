@@ -534,12 +534,19 @@ export class ValorParametroComponent implements OnInit {
       }
     }); */
   }
-  vigentes: any = [
+
+  vigentes2: any = [
     { id: 37, id_emisor: 1, tipo_movimiento: 3, codigo_moneda: "CLP", tipo: 1, valido_desde: "10-06-2019 0:00:00", valor_min: 100.0000, valor_max: 300000.0000 },
     { id: 38, id_emisor: 1, tipo_movimiento: 3, codigo_moneda: "CLP", tipo: 2, valido_desde: "11-06-2019 0:00:00", valor_min: 1.0000, valor_max: 6.0000 },
     { id: 39, id_emisor: 1, tipo_movimiento: 3, codigo_moneda: "CLP", tipo: 3, valido_desde: "12-06-2019 0:00:00", valor_min: 0.0000, valor_max: 10000000.0000 },
     { id: 41, id_emisor: 1, tipo_movimiento: 3, codigo_moneda: "CLP", tipo: 4, valido_desde: "13-06-2019 0:00:00", valor_min: 100.0000, valor_max: null }
   ];
+  vigentes: any = [ //los que estan activos, se agregan a ese array.
+    { codigo: 1, glosa: "Monto Sobregiro", tipo_dato: 13, minimo: 10, maximo: 100000, fecha: "09-06-2019 0:00:00", disabled: false, paramCard: false, hover: false },
+      { codigo: 2, glosa: "Monto Transacción", tipo_dato: 13, minimo: 11, maximo: 1111111, fecha: "10-06-2019 0:00:00", disabled: false, paramCard: false, hover: false },
+      { codigo: 3, glosa: "Cantidad Cuotas", tipo_dato: 14, minimo: 12, maximo: 1222222, fecha: "11-06-2019 0:00:00", disabled: false, paramCard:false, hover: false },
+      { codigo: 4, glosa: "Cantidad Cuotas Tasa 0", tipo_dato: 14, minimo: 15, maximo: 155555, fecha: "12-06-2019 0:00:00", disabled: false, paramCard: false, hover: false }];
+  
   mostrarGlosa(id: any) {
     let glosa: string = "";
     this.tipo_parametros.forEach(e => {
@@ -603,4 +610,46 @@ deleteSearchParam(id: any){
   }
 }
 //{ "id": 39, "id_emisor": 2, "tipo_movimiento": 3, "codigo_moneda": "CLP", "tipo": 1, "valido_desde": "08-06-2019 0:00:00", "valor_min": 0.0000, "valor_max": 10000000.0000 },
+agregar:any = false;
+buscar:any = false;
+vigente:any = true;
+buttonDisabledSearch: any = false;
+buttonDisabledAdd: any = false;
+buttonDisabledVigente: any = false;
+showAdd(){
+  this.agregar = this.agregar == true ? false : true;
+  this.buttonDisabledSearch = this.agregar;
+}
+showSearch(){
+  this.buscar = this.buscar == true ? false : true;
+  this.buttonDisabledAdd = this.buscar;
+}
+showVigente(){
+  this.vigente = this.vigente == true ? false : true;
+}
+paramCard: boolean = true;
+paraEditarCard: {codigo: number, glosa: String, tipo_dato: number, minimo: number, maximo: number, fecha: string, disabled: boolean};
+editMax: any;
+editMin: any;
+buttonCardEdit(idEmiParam: number){
+  //this.paramCard = false;
+  this.vigentes.forEach(e => {
+    if(idEmiParam == e.codigo){
+      e.paramCard = true;
+    }
+  });
+ /* this.emi_parametro_transaccion.forEach(e => {
+    if(e.id == idEmiParam){
+      
+      this.editMax = e.valor_max;
+      this.editMin = e.valor_min;
+         this.tipo_parametros.forEach(p => {
+          if(p.codigo == e.tipo){
+            this.paraEditarCard = p;
+          }
+        }); 
+      
+    }
+  });*/
+}
 }//end class

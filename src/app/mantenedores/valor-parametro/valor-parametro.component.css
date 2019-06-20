@@ -32,3 +32,44 @@
   /* Good browsers */
   opacity: 0.5;
 }
+
+.slide-fwd-center{animation:slide-fwd-center .45s cubic-bezier(.25,.46,.45,.94) both}
+@keyframes slide-fwd-center{0%{transform:translateZ(0)}100%{transform:translateZ(160px)}}
+
+.shadow-drop-center{animation:shadow-drop-center .4s cubic-bezier(.25,.46,.45,.94) both}
+@keyframes shadow-drop-center{0%{box-shadow:0 0 0 0 transparent}100%{box-shadow:0 0 20px 0 rgba(0,0,0,.35)}}
+
+
+.rotate-90-cw {
+	-webkit-animation: rotate-90-cw 0.4s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+	        animation: rotate-90-cw 0.4s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+@-webkit-keyframes rotate-90-cw {
+  0% {
+    -webkit-transform: rotate(0);
+            transform: rotate(0);
+  }
+  100% {
+    -webkit-transform: rotate(90deg);
+            transform: rotate(90deg);
+  }
+}
+@keyframes rotate-90-cw {
+  0% {
+    -webkit-transform: rotate(0);
+            transform: rotate(0);
+  }
+  100% {
+    -webkit-transform: rotate(90deg);
+            transform: rotate(90deg);
+  }
+}
+
+#mainmenu {
+  margin: 0;
+  padding: 0;
+}
+#mainmenu {
+  display: inline;
+  padding: 0 1em 0 0;
+}
